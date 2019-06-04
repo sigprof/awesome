@@ -80,6 +80,16 @@ test_rule {
     end
 }
 
+-- Test floating with function returning false
+test_rule {
+    properties = { floating = function() return false end },
+    test = function(class)
+        assert(get_client_by_class(class).floating == false)
+
+        return true
+    end
+}
+
 -- Test ontop
 test_rule {
     properties = { ontop = true },
