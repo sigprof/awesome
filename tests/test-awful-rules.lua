@@ -90,6 +90,16 @@ test_rule {
     end
 }
 
+-- Test size_hints_honor with function returning false
+test_rule {
+    properties = { size_hints_honor = function() return false end },
+    test = function(class)
+        assert(get_client_by_class(class).size_hints_honor == false)
+
+        return true
+    end
+}
+
 -- Test ontop
 test_rule {
     properties = { ontop = true },
