@@ -538,15 +538,21 @@ crules._execute = function(_, c, props, callbacks)
     -- Size hints will be re-applied when setting width/height unless it is
     -- disabled first
     if props.size_hints_honor ~= nil then
-        c.size_hints_honor = type(props.size_hints_honor) == "function" and props.size_hints_honor(c,props)
-            or props.size_hints_honor
+        if type(props.size_hints_honor) == "function" then
+            c.size_hints_honor = props.size_hints_honor(c,props)
+        else
+            c.size_hints_honor = props.size_hints_honor
+        end
     end
 
     -- Geometry will only work if floating is true, otherwise the "saved"
     -- geometry will be restored.
     if props.floating ~= nil then
-        c.floating = type(props.floating) == "function" and props.floating(c,props)
-            or props.floating
+        if type(props.floating) == "function" then
+            c.floating = props.floating(c,props)
+        else
+            c.floating = props.floating
+        end
     end
 
     -- Before requesting a tag, make sure the screen is right
