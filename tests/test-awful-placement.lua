@@ -101,6 +101,44 @@ add_client {
     end
 }
 
+-- Hide last window.
+table.insert(tests, function(count)
+    client_data[#client_data].c.hidden = true
+    return true
+end)
+
+-- Another 100x100 window should be placed to the right of the first window (the
+-- hidden window should be ignored during placement).
+add_client {
+    geometry = function(wa)
+        return {
+            width       = 100,
+            height      = 100,
+            expected_x  = wa.x + 100 + 2*border_width,
+            expected_y  = wa.y
+        }
+    end
+}
+
+-- Minimize last window.
+table.insert(tests, function(count)
+    client_data[#client_data].c.minimized = true
+    return true
+end)
+
+-- Another 100x100 window should be placed to the right of the first window (the
+-- minimized window should be ignored during placement).
+add_client {
+    geometry = function(wa)
+        return {
+            width       = 100,
+            height      = 100,
+            expected_x  = wa.x + 100 + 2*border_width,
+            expected_y  = wa.y
+        }
+    end
+}
+
 -- The wide window should be placed below the two 100x100 windows.
 add_client {
     geometry = function(wa)
