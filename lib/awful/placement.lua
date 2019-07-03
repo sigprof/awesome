@@ -905,8 +905,31 @@ function placement.no_overlap(c, args)
     args = add_context(args, "no_overlap")
     local geometry = geometry_common(c, args)
     local screen   = get_screen(c.screen or a_screen.getbycoord(geometry.x, geometry.y))
-    local cls = client.visible(screen)
-    local curlay = layout.get()
+    local cls, curlay
+    local tags = c:tags()
+    local on_selected_tag = false
+    for _, t in pairs(tags) do
+        if t.selected then
+            on_selected_tag = true
+            break
+        end
+    end
+    if on_selected_tag then
+        cls = client.visible(screen)
+        curlay = layout.get()
+    else
+        local seen = {}
+        cls = {}
+        for _, t in pairs(tags) do
+            for _, tc in pairs(t:clients()) do
+                if not tc.hidden and not tc.minimized and not seen[tc] then
+                    seen[tc] = true
+                    cls[#cls+1] = tc
+                end
+            end
+        end
+        curlay = tags[1] and tags[1].layout
+    end
     local areas = { screen.workarea }
     for _, cl in pairs(cls) do
         if cl ~= c
